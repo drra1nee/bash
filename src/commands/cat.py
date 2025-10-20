@@ -5,7 +5,11 @@
 from pathlib import Path
 
 def cat(path):
-    p = Path(path).resolve()
+    if path.startswith("~/"):
+        p = Path.home() / path[2:]
+    else:
+        p = Path(path).resolve()
+
     if p.is_dir():
         raise IsADirectoryError(f"Is a directory: {path}")
     if not p.exists():

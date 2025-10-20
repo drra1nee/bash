@@ -1,6 +1,7 @@
 """Обрабатывает ввод пользователя, разбирает команды и вызывает нужные функции"""
 
 from pathlib import Path
+import shlex
 from .logger import log_command, log_output_line, log_error
 from src.commands import ls, cd, cat
 import sys
@@ -30,7 +31,7 @@ class ShellEmulator:
 
     def execute(self, cmd_line):
         """Разбирает и выполняет команду"""
-        parts = cmd_line.split()
+        parts = shlex.split(cmd_line)
         if not parts:
             return
         cmd = parts[0]
@@ -39,18 +40,16 @@ class ShellEmulator:
         try:
             if cmd == "ls":
                 long = "-l" in args
-                path = args[1] if long and len(args) > 1 else (args[0] if not long and args else ".")
+                path = ' '.join(args[1:]) if long and len(args) > 1 else (' '.join(args) if not long and args else ".")
                 output_lines = ls(path, long=long)
 
             elif cmd == "cd":
-                cd(args[0])
+                cd(' '.join(args))
                 self.current_dir = Path.cwd()
                 output_lines = []
 
             elif cmd == "cat":
-                if len(args) != 1:
-                    raise ValueError("cat: missing file operand")
-                output_lines = cat(args[0])
+                output_lines = cat(' '.join(args))
 
             elif cmd == "exit":
                 sys.exit(0)
