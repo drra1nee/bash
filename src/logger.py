@@ -3,12 +3,15 @@
 import logging
 
 def setup_logger(log_file="shell.log"):
-    logging.basicConfig(
-        filename=log_file,
-        level=logging.INFO,
-        format='[%(asctime)s] %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S'
-    )
+    """
+    Настраивает логгер с поддержкой UTF-8 для корректного отображения русских букв.
+    """
+    logger = logging.getLogger()
+    logger.handlers.clear()
+    handler = logging.FileHandler(log_file, encoding='utf-8')
+    handler.setFormatter(logging.Formatter('[%(asctime)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
+    logger.setLevel(logging.INFO)
+    logger.addHandler(handler)
 
 def log_command(command: str):
     """Логирует введённую команду"""
