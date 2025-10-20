@@ -6,6 +6,7 @@ import os
 import stat
 from pathlib import Path
 from datetime import datetime
+from .resolve_path import resolve_path
 
 def format_permissions(path: Path):
     """
@@ -43,22 +44,16 @@ def format_time(timestamp):
 def ls(path=".", long=False):
     """
     Выводит содержимое указанного пути
-    - path: путь к файлу или каталогу (по умолчанию — текущая директория)
-    - long: если True — вывод в подробном формате (-l)
     """
-    # Обработка домашней директории
-    if path == "~":
-        path = Path.home()
-    elif path.startswith("~/"):
-        path = Path.home() / path[2:]
+    p = resolve_path(path)
 
-    p = Path(path).resolve()
     if not p.exists():
         raise FileNotFoundError(f"No such file or directory: {path}")
 
     items = sorted(p.iterdir()) if p.is_dir() else [p]
     output_lines = []
 
+    # long: если True — вывод в подробном формате (-l)
     if long:
         for item in items:
             perms = format_permissions(item)  # передаём сам Path

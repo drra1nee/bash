@@ -1,15 +1,10 @@
 """Смена текущей рабочей директории"""
 
 import os
-from pathlib import Path
+from .resolve_path import resolve_path
 
 def cd(path):
-    if path == "~" or path == "":
-        target = Path.home()
-    elif path.startswith("~/"):
-        target = Path.home() / path[2:]
-    else:
-        target = Path(path).resolve()
+    target = resolve_path(path)
 
     if not target.exists() or not target.is_dir():
         raise FileNotFoundError(f"No such directory: {path}")

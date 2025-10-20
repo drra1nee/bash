@@ -2,13 +2,10 @@
 Возвращает список строк — содержимое файла.
 """
 
-from pathlib import Path
+from .resolve_path import resolve_path
 
 def cat(path):
-    if path.startswith("~/"):
-        p = Path.home() / path[2:]
-    else:
-        p = Path(path).resolve()
+    p = resolve_path(path)
 
     if p.is_dir():
         raise IsADirectoryError(f"Is a directory: {path}")
