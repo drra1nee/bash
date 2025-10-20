@@ -20,7 +20,7 @@ def format_permissions(path: Path):
     if os.name != 'nt':
         return stat.filemode(st.st_mode)
 
-    # На Windows — эмуляция, так как windows не использует Unix права напрямую
+    # На Windows — эмуляция, так как Windows не использует Unix права напрямую
     is_dir = path.is_dir()
 
     # Владелец (user)
@@ -37,7 +37,7 @@ def format_permissions(path: Path):
     return f"{type_char}{user_r}{user_w}{user_x}{group_r}{group_w}{group_x}{other_r}{other_w}{other_x}"
 
 def format_time(timestamp):
-    """Преобразует временную метку в читаемую дату и время без секунд"""
+    """Преобразует временную метку в читаемую дату и время"""
     return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M')
 
 def ls(path=".", long=False):
@@ -46,6 +46,12 @@ def ls(path=".", long=False):
     - path: путь к файлу или каталогу (по умолчанию — текущая директория)
     - long: если True — вывод в подробном формате (-l)
     """
+    # Обработка домашней директории
+    if path == "~":
+        path = Path.home()
+    elif path.startswith("~/"):
+        path = Path.home() / path[2:]
+
     p = Path(path).resolve()
     if not p.exists():
         raise FileNotFoundError(f"No such file or directory: {path}")
