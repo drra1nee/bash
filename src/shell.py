@@ -2,7 +2,7 @@
 
 from pathlib import Path
 from .logger import log_command, log_output_line, log_error
-from src.commands import ls
+from src.commands import ls, cd
 import sys
 
 class ShellEmulator:
@@ -40,8 +40,15 @@ class ShellEmulator:
                 long = "-l" in args
                 path = args[1] if long and len(args) > 1 else (args[0] if not long and args else ".")
                 output_lines = ls(path, long=long)
+
+            elif cmd == "cd":
+                cd(args[0])
+                self.current_dir = Path.cwd()
+                output_lines = []
+
             elif cmd == "exit":
                 sys.exit(0)
+
             else:
                 raise ValueError(f"command not found: {cmd}")
 
