@@ -4,9 +4,6 @@ import os
 from pathlib import Path
 
 def cd(path):
-    """
-    Меняет текущую рабочую директорию
-    """
     if path == "~" or path == "":
         target = Path.home()
     else:

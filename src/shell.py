@@ -2,7 +2,7 @@
 
 from pathlib import Path
 from .logger import log_command, log_output_line, log_error
-from src.commands import ls, cd
+from src.commands import ls, cd, cat
 import sys
 
 class ShellEmulator:
@@ -46,6 +46,11 @@ class ShellEmulator:
                 cd(args[0])
                 self.current_dir = Path.cwd()
                 output_lines = []
+
+            elif cmd == "cat":
+                if len(args) != 1:
+                    raise ValueError("cat: missing file operand")
+                output_lines = cat(args[0])
 
             elif cmd == "exit":
                 sys.exit(0)
