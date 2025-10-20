@@ -13,15 +13,15 @@ def setup_logger(log_file="shell.log"):
     logger.setLevel(logging.INFO)
     logger.addHandler(handler)
 
-def log_command(command: str):
+def log_command(command):
     """Логирует введённую команду"""
     logging.info(command)
 
-def log_output_line(line: str):
+def log_output_line(line):
     """Логирует строку вывода команды"""
     if line.strip() != "":
         logging.info(line)
 
-def log_error(message: str):
+def log_error(message):
     """Логирует ошибку"""
     logging.info(f"ERROR: {message}")
