@@ -9,8 +9,6 @@ def cd(path):
     """
     if path == "~" or path == "":
         target = Path.home()
-    elif path == "..":
-        target = Path.cwd().parent
     else:
         target = Path(path).resolve()
 
@@ -18,4 +16,3 @@ def cd(path):
         raise FileNotFoundError(f"No such directory: {path}")
 
     os.chdir(target)
-    return []  # ничего не выводим

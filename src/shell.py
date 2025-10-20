@@ -35,6 +35,7 @@ class ShellEmulator:
             return
         cmd = parts[0]
         args = parts[1:]
+
         try:
             if cmd == "ls":
                 long = "-l" in args
