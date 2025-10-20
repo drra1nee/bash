@@ -1,20 +1,12 @@
-from src.power import power_function
-from src.constants import SAMPLE_CONSTANT
+"""Главный модуль оболочки - точка входа в программу"""
 
+from src.logger import setup_logger
+from src.shell import ShellEmulator
 
-def main() -> None:
-    """
-    Обязательнная составляющая программ, которые сдаются. Является точкой входа в приложение
-    :return: Данная функция ничего не возвращает
-    """
-
-    target, degree = map(int, input("Введите два числа разделенные пробелом: ").split(" "))
-
-    result = power_function(target=target, power=degree)
-
-    print(result)
-
-    print(SAMPLE_CONSTANT)
+def main():
+    setup_logger()
+    shell = ShellEmulator()
+    shell.run()
 
 if __name__ == "__main__":
     main()
