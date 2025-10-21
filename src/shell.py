@@ -3,7 +3,7 @@
 from pathlib import Path
 import shlex
 from .logger import log_command, log_output_line, log_error
-from src.commands import ls, cd, cat
+from src.commands import ls, cd, cat, cp
 import sys
 
 class ShellEmulator:
@@ -40,7 +40,12 @@ class ShellEmulator:
         try:
             if cmd == "ls":
                 long = "-l" in args
-                path = ' '.join(args[1:]) if long and len(args) > 1 else (' '.join(args) if not long and args else ".")
+                if long and len(args) > 1:
+                    path = ' '.join(args[1:])
+                elif not long and args:
+                    path = ' '.join(args)
+                else:
+                    path = "."
                 output_lines = ls(path, long=long)
 
             elif cmd == "cd":
@@ -50,6 +55,25 @@ class ShellEmulator:
 
             elif cmd == "cat":
                 output_lines = cat(' '.join(args))
+
+            elif cmd == "cp":
+                if len(args) < 2:
+                    raise ValueError("cp: missing file operand")
+
+                # Проверяем, используется ли флаг -r и стоит ли он сразу после cp
+                recursive = False
+                if len(args) >= 3 and args[0] == "-r":
+                    recursive = True
+                    sources = args[1:-1]
+                    destination = args[-1]
+                else:
+                    sources = args[:-1]
+                    destination = args[-1]
+
+                if len(sources) == 0:
+                    raise ValueError("cp: missing source operand")
+                cp(sources, destination, recursive=recursive)
+                output_lines = []
 
             elif cmd == "exit":
                 sys.exit(0)
