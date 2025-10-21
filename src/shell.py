@@ -39,7 +39,7 @@ class ShellEmulator:
 
         try:
             if cmd == "ls":
-                # Проверяем, используется ли флаг -r
+                # Проверяем, используется ли флаг -l
                 long = "-l" in args
                 if long and len(args) > 1:
                     path = ' '.join(args[1:])
@@ -47,7 +47,6 @@ class ShellEmulator:
                     path = ' '.join(args)
                 else:
                     path = "."
-
                 output_lines = ls(path, long=long)
 
             elif cmd == "cd":
@@ -61,7 +60,6 @@ class ShellEmulator:
             elif cmd == "cp":
                 if len(args) < 2:
                     raise ValueError("cp: missing file operand")
-
                 # Проверяем, используется ли флаг -r и стоит ли он сразу после cp
                 recursive = False
                 if len(args) >= 3 and args[0] == "-r":
@@ -71,9 +69,6 @@ class ShellEmulator:
                 else:
                     sources = args[:-1]
                     destination = args[-1]
-
-                if len(sources) == 0:
-                    raise ValueError("cp: missing source operand")
                 cp(sources, destination, recursive=recursive)
                 output_lines = []
 
