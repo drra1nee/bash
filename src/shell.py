@@ -39,6 +39,7 @@ class ShellEmulator:
 
         try:
             if cmd == "ls":
+                # Проверяем, используется ли флаг -r
                 long = "-l" in args
                 if long and len(args) > 1:
                     path = ' '.join(args[1:])
@@ -46,6 +47,7 @@ class ShellEmulator:
                     path = ' '.join(args)
                 else:
                     path = "."
+
                 output_lines = ls(path, long=long)
 
             elif cmd == "cd":

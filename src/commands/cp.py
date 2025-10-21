@@ -32,10 +32,7 @@ def cp(sources, destination, recursive=False):
             shutil.copytree(src, target, dirs_exist_ok=True)
         else:
             # Копируем файл
-            if dst.exists() and dst.is_dir():
-                target = dst / src.name
-            else:
-                target = dst
+            target = dst / src.name if (dst.exists() and dst.is_dir()) else dst
             shutil.copy2(src, target)
     else:
         # Несколько источников: destination должен быть каталогом
