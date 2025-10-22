@@ -3,7 +3,7 @@
 from pathlib import Path
 import shlex
 from .logger import log_command, log_output_line, log_error
-from src.commands import ls, cd, cat, cp
+from src.commands import ls, cd, cat, cp, mv
 import sys
 
 class ShellEmulator:
@@ -25,7 +25,7 @@ class ShellEmulator:
 
                 log_command(user_input)  # Сразу логирует введённую команду
                 self.execute(user_input)
-            except (KeyboardInterrupt, EOFError):
+            except KeyboardInterrupt:
                 print("\nExit")
                 break
 
@@ -70,6 +70,14 @@ class ShellEmulator:
                     sources = args[:-1]
                     destination = args[-1]
                 cp(sources, destination, recursive=recursive)
+                output_lines = []
+
+            elif cmd == "mv":
+                if len(args) < 2:
+                    raise ValueError("mv: missing file operand")
+                sources = args[:-1]
+                destination = args[-1]
+                mv(sources, destination)
                 output_lines = []
 
             elif cmd == "exit":
