@@ -15,12 +15,12 @@ def setup_logger(log_file="shell.log"):
 
 def log_command(command):
     """Логирует введённую команду"""
-    logging.info(command)
+    logging.info(f"INFO: {command}")
 
 def log_output_line(line):
     """Логирует строку вывода команды"""
     if line.strip() != "":
-        logging.info(line)
+        logging.info(f"INFO: {line}")
 
 def log_error(message):
     """Логирует ошибку"""

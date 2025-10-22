@@ -87,6 +87,10 @@ class ShellEmulator:
                 raise ValueError(f"command not found: {cmd}")
 
             # Выводим в консоль и логируем каждую строку результата
+            if len(output_lines) == 0:
+                log_output_line("Success")
+            else:
+                log_output_line("Success, result:")
             for line in output_lines:
                 clean_line = line.rstrip('\n\r')
                 print(clean_line)
