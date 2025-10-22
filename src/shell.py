@@ -3,7 +3,7 @@
 from pathlib import Path
 import shlex
 from .logger import log_command, log_output_line, log_error
-from src.commands import ls, cd, cat, cp, mv
+from src.commands import ls, cd, cat, cp, mv, rm
 import sys
 
 class ShellEmulator:
@@ -78,6 +78,17 @@ class ShellEmulator:
                 sources = args[:-1]
                 destination = args[-1]
                 mv(sources, destination)
+                output_lines = []
+
+            elif cmd == "rm":
+                recursive = "-r" in args
+                if recursive:
+                    path = ' '.join(args[1:])
+                else:
+                    path = ' '.join(args)
+                if len(path) == 0:
+                    raise ValueError("rm: missing operand")
+                rm(path, recursive=recursive)
                 output_lines = []
 
             elif cmd == "exit":
