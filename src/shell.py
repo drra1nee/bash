@@ -3,7 +3,8 @@
 from pathlib import Path
 import shlex
 from .logger import log_command, log_output_line, log_error
-from src.commands import ls, cd, cat, cp, mv, rm
+from src.commands import ls, cd, cat, cp, mv, rm, zip_cmd, unzip_cmd, tar_cmd, untar_cmd
+
 import sys
 
 class ShellEmulator:
@@ -89,6 +90,30 @@ class ShellEmulator:
                 if len(path) == 0:
                     raise ValueError("rm: missing operand")
                 rm(path, recursive=recursive)
+                output_lines = []
+
+            elif cmd == "zip":
+                if len(args) != 2:
+                    raise ValueError("zip: wrong number of arguments")
+                zip_cmd(args[0], args[1])
+                output_lines = []
+
+            elif cmd == "unzip":
+                    if len(args) != 1:
+                        raise ValueError("unzip: wrong number of arguments")
+                    unzip_cmd(args[0])
+                    output_lines = []
+
+            elif cmd == "tar":
+                if len(args) != 2:
+                    raise ValueError("tar: wrong number of arguments")
+                tar_cmd(args[0], args[1])
+                output_lines = []
+
+            elif cmd == "untar":
+                if len(args) != 1:
+                    raise ValueError("untar: wrong number of arguments")
+                untar_cmd(args[0])
                 output_lines = []
 
             elif cmd == "exit":
