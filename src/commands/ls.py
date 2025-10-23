@@ -37,9 +37,9 @@ def format_permissions(path: Path):
     type_char = 'd' if is_dir else '-'
     return f"{type_char}{user_r}{user_w}{user_x}{group_r}{group_w}{group_x}{other_r}{other_w}{other_x}"
 
-def format_time(timestamp):
+def format_time(time):
     """Преобразует временную метку в читаемую дату и время"""
-    return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M')
+    return datetime.fromtimestamp(time).strftime('%Y-%m-%d %H:%M')
 
 def ls(path=".", long=False):
     """
@@ -48,7 +48,7 @@ def ls(path=".", long=False):
     p = resolve_path(path)
 
     if not p.exists():
-        raise FileNotFoundError(f"No such file or directory: {path}")
+        raise FileNotFoundError(f"ls: cannot access '{path}': No such file or directory")
 
     items = sorted(p.iterdir()) if p.is_dir() else [p]
     output_lines = []

@@ -10,12 +10,15 @@ def mv(sources, destination):
     dst = resolve_path(destination)
 
     if len(sources) > 1 and not dst.is_dir():
-        raise NotADirectoryError(f"Destination is not a directory: {destination}")
+        raise NotADirectoryError(f"mv: target '{destination}' is not a directory")
 
     for src_str in sources:
         src = resolve_path(src_str)
         if not src.exists():
-            raise FileNotFoundError(f"Source not found: {src_str}")
-        if not os.access(src, os.R_OK) or not os.access(dst, os.W_OK):
-            raise PermissionError("mv: permission denied")
+            raise FileNotFoundError(f"mv: cannot stat '{src_str}': No such file or directory")
+        if not os.access(src, os.R_OK):
+            raise PermissionError(f"cp: '{src.name}' permission denied")
+        if not os.access(dst, os.W_OK):
+            raise PermissionError(f"cp: '{dst.name}' permission denied")
+
         shutil.move(src, dst)

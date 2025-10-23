@@ -18,17 +18,17 @@ def _is_root_path(path):
 def rm(path, recursive=False):
     p = resolve_path(path)
     if not p.exists():
-        raise FileNotFoundError(f"No such file or directory: {path}")
+        raise FileNotFoundError(f"rm: cannot remove '{path}': No such file or directory")
 
     # Защита от удаления корня, домашней и родительской папки
     if _is_root_path(p) or str(p) in [str(Path.home()), str(Path.cwd().parent)]:
-        raise PermissionError("Cannot remove protected directories")
+        raise PermissionError(f"rm: cannot remove '{path}': Permission denied")
 
     # Удаление папки
     if p.is_dir():
         if not recursive:
-            raise ValueError("Use -r to remove directories")
-        confirm = input(f"Remove directory '{p}' recursively? (y/n): ")
+            raise OSError(f"rm: cannot remove '{path}': Is a directory")
+        confirm = input(f"Remove directory '{p}'? (y/n): ")
         if confirm.lower() != 'y':
             return []
         shutil.rmtree(p)

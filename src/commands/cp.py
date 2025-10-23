@@ -10,19 +10,21 @@ def cp(sources, destination, recursive=False):
 
     # При нескольких источниках destination должен быть каталогом
     if len(sources) > 1 and not dst.is_dir():
-        raise NotADirectoryError(f"Destination is not a directory: {destination}")
+        raise NotADirectoryError(f"cp: target '{destination}' is not a directory")
 
     for src_str in sources:
         src = resolve_path(src_str)
         if not src.exists():
-            raise FileNotFoundError(f"Source does not exist: {src_str}")
-        if not os.access(src, os.R_OK) or not os.access(dst, os.W_OK):
-            raise PermissionError("cp: permission denied")
+            raise FileNotFoundError(f"cp: Cannot stat '{src_str}': No such file or directory")
+        if not os.access(src, os.R_OK):
+            raise PermissionError(f"cp: '{src.name}' permission denied")
+        if not os.access(dst, os.W_OK):
+            raise PermissionError(f"cp: '{dst.name}' permission denied")
 
         # src - каталог
         if src.is_dir():
             if not recursive:
-                raise IsADirectoryError(f"Source is a directory: {src_str} (use -r for recursive copy)")
+                raise IsADirectoryError(f"cp: -r not specified; omitting directory '{src_str}'")
             # Определяем целевой путь
             if dst.is_dir():
                 target = dst / src.name
