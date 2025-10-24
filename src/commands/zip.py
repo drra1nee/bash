@@ -35,8 +35,8 @@ def zip_cmd(folder, archive):
         # Сохраняем структуру: архив будет содержать саму папку folder/
         for file_path in src.rglob('*'):
             # Относительный путь от родителя folder
-            arcname = file_path.relative_to(src.parent)
-            zf.write(file_path, arcname)
+            arc = file_path.relative_to(src.parent)
+            zf.write(file_path, arc)
         # Добавляем саму папку, если она пустая
         if not any(src.iterdir()):
             zf.writestr(f"{src.name}/", "")
@@ -44,7 +44,7 @@ def zip_cmd(folder, archive):
 
 def unzip_cmd(archive):
     """
-    Распаковывает ZIP-архив в текущий рабочий каталог
+    Распаковывает ZIP-архив в каталог, в котором находится архив
     """
     arc = resolve_path(archive)
 

@@ -24,7 +24,7 @@ def format_permissions(path: Path):
     # На Windows — эмуляция, так как Windows не использует Unix права напрямую
     is_dir = path.is_dir()
 
-    # Владелец (user)
+    # Владелец
     user_r = 'r'
     user_w = 'w' if os.access(path, os.W_OK) else '-'  # проверка на запись
     user_x = 'x' if is_dir else '-'  # каталоги — исполняемые
@@ -41,31 +41,54 @@ def format_time(time):
     """Преобразует временную метку в читаемую дату и время"""
     return datetime.fromtimestamp(time).strftime('%Y-%m-%d %H:%M')
 
-def ls(path=".", long=False):
+def ls(paths, long=False):
     """
-    Выводит содержимое указанного пути
+    Выводит содержимое одного или нескольких путей
     """
-    p = resolve_path(path)
 
-    if not p.exists():
-        raise FileNotFoundError(f"ls: cannot access '{path}': No such file or directory")
+    resolved_paths = [resolve_path(p) for p in paths]
 
-    items = sorted(p.iterdir()) if p.is_dir() else [p]
     output_lines = []
+    multiple = len(resolved_paths) > 1
 
-    # long: если True — вывод в подробном формате (-l)
-    if long:
-        for item in items:
-            perms = format_permissions(item)  # передаём сам Path
-            st = item.stat()
-            size = st.st_size
-            mtime = format_time(st.st_mtime)
-            output_lines.append(f"{perms} {size:>10} {mtime} {item.name}")
-    else:
-        # Вывод без -l: по 5 файлов/папок в строке
-        names = [item.name for item in items]
-        for i in range(0, len(names), 5):
-            line = "  ".join(names[i:i + 5])
-            output_lines.append(line)
+    for p, orig in zip(resolved_paths, paths):
+        if not p.exists():
+            raise FileNotFoundError(f"ls: Cannot access '{orig}': No such file or directory")
+
+        # Получаем содержимое каталога
+        if p.is_dir():
+            try:
+                items = p.iterdir()
+            except PermissionError:
+                raise PermissionError(f"ls: Cannot open directory '{orig}': Permission denied")
+
+            # Подробное отображение
+            if long:
+                # Если больше одного пути, записываем название каталога
+                if multiple:
+                    output_lines.append(f"'{orig}':")
+                for item in items:
+                    # Получение данных о файле и запись их в нужном формате
+                    perms = format_permissions(item)
+                    st = item.stat()
+                    size = st.st_size
+                    mtime = format_time(st.st_mtime)
+                    output_lines.append(f"{perms} {size:>10} {mtime} {item.name}")
+            else:
+                # Короткий формат
+                if multiple:
+                    output_lines.append(f"'{orig}':")
+                for item in items:
+                    output_lines.append(item.name)
+        else:
+            # Это файл
+            if long:
+                perms = format_permissions(p)
+                st = p.stat()
+                size = st.st_size
+                mtime = format_time(st.st_mtime)
+                output_lines.append(f"{perms} {size:>10} {mtime} {p.name}")
+            else:
+                output_lines.append(p.name)
 
     return output_lines

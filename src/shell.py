@@ -40,15 +40,18 @@ class ShellEmulator:
 
         try:
             if cmd == "ls":
-                # Проверяем, используется ли флаг -l
-                long = "-l" in args
-                if long and len(args) > 1:
-                    path = ' '.join(args[1:])
-                elif not long and args:
-                    path = ' '.join(args)
+                long = False
+                # Если есть указание -l или путей
+                if args:
+                    if args[0] == "-l":
+                        long = True
+                        paths = args[1:] if len(args) > 1 else ["."]
+                    else:
+                        paths = args
+                # Если нет никаких аргументов
                 else:
-                    path = "."
-                output_lines = ls(path, long=long)
+                    paths = ["."]
+                output_lines = ls(paths, long=long)
 
             elif cmd == "cd":
                 cd(' '.join(args))
@@ -56,7 +59,9 @@ class ShellEmulator:
                 output_lines = []
 
             elif cmd == "cat":
-                output_lines = cat(' '.join(args))
+                if not args:
+                    raise ValueError("cat: missing file operand")
+                output_lines = cat(args)
 
             elif cmd == "cp":
                 if len(args) < 2:
@@ -82,15 +87,22 @@ class ShellEmulator:
                 output_lines = []
 
             elif cmd == "rm":
-                recursive = "-r" in args
-                if recursive:
-                    path = ' '.join(args[1:])
+                recursive = False
+                # Если есть указание -r или путей
+                if args:
+                    if args[0] == "-r":
+                        recursive = True
+                        paths = args[1:] if len(args) > 1 else []
+                    else:
+                        paths = args
+                # Если нет никаких аргументов
                 else:
-                    path = ' '.join(args)
-                if len(path) == 0:
+                    paths = []
+                if not paths:
                     raise ValueError("rm: missing operand")
-                rm(path, recursive=recursive)
+                rm(paths, recursive=recursive)
                 output_lines = []
+
 
             elif cmd == "zip":
                 if len(args) != 2:

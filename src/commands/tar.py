@@ -37,7 +37,7 @@ def tar_cmd(folder, archive):
 
 def untar_cmd(archive):
     """
-    Распаковывает TAR.GZ-архив в текущий рабочий каталог
+    Распаковывает TAR.GZ-архив в каталог, в котором находится архив
     """
     arc = resolve_path(archive)
 
