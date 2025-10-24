@@ -1,13 +1,13 @@
-"""Копирование файлов и каталогов"""
+"""
+Копирование файлов и каталогов
+"""
 
 import shutil
 from .resolve_path import resolve_path
 import os
 
 def get_writable_base(path):
-    """
-    Возвращает ближайший существующий родительский каталог для path
-    """
+    """Возвращает ближайший существующий родительский каталог для path"""
     p = path.resolve()
     # Идем до корня
     while p != p.parent:
@@ -49,6 +49,6 @@ def cp(sources, destination, recursive=False):
             shutil.copytree(src, target, dirs_exist_ok=True)
         # src - файл
         else:
-            if not os.access(dst, os.W_OK):
+            if not os.access(write_base, os.W_OK):
                 raise PermissionError(f"cp: '{dst.name}' permission denied")
             shutil.copy2(src, dst)

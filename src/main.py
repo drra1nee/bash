@@ -1,4 +1,6 @@
-"""Главный модуль оболочки - точка входа в программу"""
+"""
+Главный модуль оболочки - точка входа в программу
+"""
 
 from src.logger import setup_logger
 from src.shell import ShellEmulator

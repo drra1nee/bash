@@ -14,11 +14,11 @@ def mv(sources, destination):
 
     for src_str in sources:
         src = resolve_path(src_str)
-        if not src.exists():
-            raise FileNotFoundError(f"mv: cannot stat '{src_str}': No such file or directory")
+        if not src.exists() or (not dst.parent and dst.is_file()) or (not dst.exists() and dst.is_dir()):
+            raise FileNotFoundError(f"mv: mv: cannot move '{src_str}' to '{destination}': No such file or directory")
         if not os.access(src, os.R_OK):
-            raise PermissionError(f"cp: '{src.name}' permission denied")
-        if not os.access(dst, os.W_OK):
-            raise PermissionError(f"cp: '{dst.name}' permission denied")
+            raise PermissionError(f"mv: '{src.name}' permission denied")
+        if not os.access(dst.parent, os.W_OK):
+            raise PermissionError(f"mv: '{dst.name}' permission denied")
 
         shutil.move(src, dst)
