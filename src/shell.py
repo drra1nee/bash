@@ -25,8 +25,8 @@ class ShellEmulator:
                 user_input = input(prompt).strip()
                 if not user_input:
                     continue
-
-                log_command(user_input)  # Сразу логирует введённую команду
+                # Сразу логирует введённую команду
+                log_command(user_input)
                 self.execute(user_input)
             except KeyboardInterrupt:
                 print("\nExit")

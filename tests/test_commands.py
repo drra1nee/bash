@@ -1,3 +1,8 @@
+"""
+Тесты комманд
+"""
+
+
 import unittest
 import tempfile
 import os

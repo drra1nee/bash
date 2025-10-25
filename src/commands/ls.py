@@ -4,11 +4,10 @@
 
 import os
 import stat
-from pathlib import Path
 from datetime import datetime
 from .resolve_path import resolve_path
 
-def format_permissions(path: Path):
+def format_permissions(path):
     """
     Возвращает строку прав доступа в формате '-rwxr-xr-x'
     """

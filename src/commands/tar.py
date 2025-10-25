@@ -53,4 +53,4 @@ def untar_cmd(archive):
         raise PermissionError(f"untar: Cannot write to directory '{arc.parent}': Permission denied")
 
     with tarfile.open(arc, "r:gz") as tf:
-        tf.extractall(path=arc.parent)
+        tf.extractall(path=arc.parent, filter='tar')
