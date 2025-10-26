@@ -1,14 +1,15 @@
 """
-Модуль для ведения журнала (логирования) всех действий пользователя
+Модуль для логирования всех действий пользователя
 """
 
 import logging
 
 def setup_logger(log_file="shell.log"):
     """
-    Настраивает логгер с поддержкой UTF-8 для корректного отображения русских букв
+    Настраивает логгер
     """
     logger = logging.getLogger()
+    # utf-8 для того, чтобы в файле логирования русские буквы нормально отображались
     handler = logging.FileHandler(log_file, encoding='utf-8')
     handler.setFormatter(logging.Formatter('[%(asctime)s] %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
     logger.setLevel(logging.INFO)

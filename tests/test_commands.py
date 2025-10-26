@@ -2,7 +2,6 @@
 Тесты команд
 """
 
-
 import unittest
 import tempfile
 import os
@@ -11,7 +10,6 @@ from pathlib import Path
 from src.commands import ls, cd, cat, cp, mv, rm, zip_cmd, unzip_cmd, tar_cmd, untar_cmd
 
 class TestCommands(unittest.TestCase):
-
     def setUp(self):
         """Временный каталог для всех тестов"""
         self.test_dir = Path(tempfile.mkdtemp())
