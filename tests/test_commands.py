@@ -1,5 +1,5 @@
 """
-Тесты комманд
+Тесты команд
 """
 
 
@@ -67,6 +67,16 @@ class TestCommands(unittest.TestCase):
         output = cat([str(f1), str(f2)])
         self.assertEqual(output, ["A", "B"])
 
+    def test_cat_on_directory(self):
+        d = self.test_dir / "dir"
+        d.mkdir()
+        with self.assertRaises(IsADirectoryError):
+            cat([str(d)])
+
+    def test_cat_nonexistent_file(self):
+        with self.assertRaises(FileNotFoundError):
+            cat(["nonexistent.txt"])
+
     # cp
     def test_cp_file(self):
         src = self.test_dir / "src.txt"
@@ -90,6 +100,10 @@ class TestCommands(unittest.TestCase):
         with self.assertRaises(IsADirectoryError):
             cp([str(src_dir)], "dst", recursive=False)
 
+    def test_cp_nonexistent_source(self):
+        with self.assertRaises(FileNotFoundError):
+            cp(["nonexistent.txt"], "dst.txt")
+
     # mv
     def test_mv_file(self):
         src = self.test_dir / "old.txt"
@@ -108,6 +122,10 @@ class TestCommands(unittest.TestCase):
         self.assertFalse(src_file.exists())
         moved_file = target_dir / "test.txt"
         self.assertTrue(moved_file.exists())
+
+    def test_mv_nonexistent_source(self):
+        with self.assertRaises(FileNotFoundError):
+            mv(["nonexistent.txt"], "dest.txt")
 
     # rm
     def test_rm_file(self):
@@ -144,6 +162,18 @@ class TestCommands(unittest.TestCase):
         finally:
             builtins.input = original_input
 
+    def test_rm_nonexistent(self):
+        with self.assertRaises(FileNotFoundError):
+            rm(["nonexistent.txt"], recursive=False)
+
+    def test_rm_root_protection(self):
+        # Проверяем защиту от удаления корня (в твоей реализации)
+        root_path = "/"
+        if os.name == 'nt':
+            root_path = "C:\\"
+        with self.assertRaises(PermissionError):
+            rm([root_path], recursive=True)
+
     # zip/unzip
     def test_zip_unzip(self):
         # zip
@@ -158,6 +188,20 @@ class TestCommands(unittest.TestCase):
         unzip_cmd(str(archive_path))
         self.assertTrue((self.test_dir / "folder" / "f.txt").exists())
 
+    def test_zip_nonexistent_folder(self):
+        with self.assertRaises(FileNotFoundError):
+            zip_cmd("nonexistent", "archive.zip")
+
+    def test_unzip_nonexistent_archive(self):
+        with self.assertRaises(FileNotFoundError):
+            unzip_cmd("nonexistent.zip")
+
+    def test_unzip_invalid_file(self):
+        f = self.test_dir / "not_zip.txt"
+        f.write_text("not a zip")
+        with self.assertRaises(ValueError):
+            unzip_cmd(str(f))
+
     # tar/untar
     def test_tar_and_untar(self):
         # tar
@@ -171,6 +215,20 @@ class TestCommands(unittest.TestCase):
         shutil.rmtree(folder)
         untar_cmd(str(archive_path))
         self.assertTrue((self.test_dir / "tar_folder" / "t.txt").exists())
+
+    def test_tar_nonexistent_folder(self):
+        with self.assertRaises(FileNotFoundError):
+            tar_cmd("nonexistent", "archive.tar.gz")
+
+    def test_untar_nonexistent_archive(self):
+        with self.assertRaises(FileNotFoundError):
+            untar_cmd("nonexistent.tar.gz")
+
+    def test_untar_invalid_file(self):
+        f = self.test_dir / "not_tar.txt"
+        f.write_text("not a tar")
+        with self.assertRaises(ValueError):
+            untar_cmd(str(f))
 
 
 if __name__ == "__main__":
