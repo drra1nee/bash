@@ -11,9 +11,11 @@ from .resolve_path import resolve_path
 def is_root_path(path):
     """Проверяет, является ли путь корнем диска на Windows или / на Unix."""
     resolved = str(path.resolve())
-    if os.name == 'nt':  # Windows
+    # Windows
+    if os.name == 'nt':
         return len(resolved) == 3 and (resolved[1:] == ":\\" or resolved[1:] == ":/")
-    else:  # Unix
+    # Unix
+    else:
         return resolved == "/" or resolved == "\\"
 
 

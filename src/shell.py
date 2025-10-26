@@ -56,7 +56,13 @@ class ShellEmulator:
                 output_lines = ls(paths, long=long)
 
             elif cmd == "cd":
-                cd(' '.join(args))
+                if len(args) > 1:
+                    raise ValueError("cd: too many arguments")
+                if not args:
+                    target = str(Path.home())
+                else:
+                    target = args[0]
+                cd(target)
                 self.current_dir = Path.cwd()
                 output_lines = []
 

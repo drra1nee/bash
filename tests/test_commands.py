@@ -35,7 +35,7 @@ class TestCommands(unittest.TestCase):
         f.write_text("x")
         output = ls(["."], long=True)
         self.assertTrue(any("test.txt" in line for line in output))
-        self.assertTrue(any("-rw" in line for line in output))
+        self.assertTrue(any("-rw-r--r--" in line for line in output))
 
     def test_ls_nonexistent(self):
         with self.assertRaises(FileNotFoundError):
