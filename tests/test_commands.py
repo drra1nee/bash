@@ -48,7 +48,7 @@ class TestCommands(unittest.TestCase):
         cd(str(new_dir))
         self.assertEqual(Path.cwd(), new_dir.resolve())
 
-    def test_cd_invalid(self):
+    def test_cd_nonexistent(self):
         with self.assertRaises(FileNotFoundError):
             cd("nonexistent")
 
@@ -81,10 +81,10 @@ class TestCommands(unittest.TestCase):
     def test_cp_file(self):
         src = self.test_dir / "src.txt"
         dst = self.test_dir / "dst.txt"
-        src.write_text("ч")
+        src.write_text("x")
         cp([str(src)], str(dst))
         self.assertTrue(dst.exists())
-        self.assertEqual(dst.read_text(), "ч")
+        self.assertEqual(dst.read_text(), "x")
 
     def test_cp_dir_recursive(self):
         src_dir = self.test_dir / "src_dir"
@@ -117,7 +117,7 @@ class TestCommands(unittest.TestCase):
         src_file = self.test_dir / "test.txt"
         target_dir = self.test_dir / "dir"
         target_dir.mkdir()
-        src_file.write_text("important data")
+        src_file.write_text("x")
         mv([str(src_file)], str(target_dir))
         self.assertFalse(src_file.exists())
         moved_file = target_dir / "test.txt"
