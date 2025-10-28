@@ -5,7 +5,7 @@
 from pathlib import Path
 import shlex
 from .logger import log_command, log_output_line, log_error
-from src.commands import ls, cd, cat, cp, mv, rm, zip_cmd, unzip_cmd, tar_cmd, untar_cmd
+from src.commands import ls, cd, cat, cp, mv, rm, zip_cmd, unzip_cmd, tar_cmd, untar_cmd, grep
 
 import sys
 
@@ -111,7 +111,6 @@ class ShellEmulator:
                 rm(paths, recursive=recursive)
                 output_lines = []
 
-
             elif cmd == "zip":
                 if len(args) != 2:
                     raise ValueError("zip: wrong number of arguments")
@@ -135,6 +134,37 @@ class ShellEmulator:
                     raise ValueError("untar: wrong number of arguments")
                 untar_cmd(args[0])
                 output_lines = []
+
+            elif cmd == "grep":
+                if not args:
+                    raise ValueError("Usage: grep [-r] [-i] PATTERN [FILE]...")
+                recursive = False
+                ignore_case = False
+                i = 0
+                # Парсим флаги
+                while i < len(args) and args[i].startswith('-'):
+                    flag = args[i]
+                    if flag == '-r':
+                        recursive = True
+                    elif flag == '-i':
+                        ignore_case = True
+                    else:
+                        raise ValueError(f"grep: invalid option '{flag}'")
+                    i += 1
+                # После флагов паттерн
+                if i >= len(args):
+                    raise ValueError("grep: no pattern given")
+                pattern = args[i]
+                i += 1
+                # Пути
+                search_paths = args[i:]
+                # Проверка наличия путей
+                if not search_paths:
+                    if recursive:
+                        search_paths = ['.']
+                    else:
+                        raise ValueError("grep: no input files specified")
+                output_lines = grep(pattern, search_paths, recursive=recursive, ignore_case=ignore_case)
 
             elif cmd == "exit":
                 sys.exit(0)

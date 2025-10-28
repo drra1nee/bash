@@ -17,7 +17,7 @@ def cat(paths):
             raise IsADirectoryError(f"cat: {path}: Is a directory")
 
         # Список кодировок для перебора
-        encodings = ['utf-8', 'cp1251', 'utf-16', 'koi8-r', 'iso-8859-1']
+        encodings = ['utf-8', 'utf-16']
         decoded = False
 
         # Перебор кодировок для правильного чтения файла

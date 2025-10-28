@@ -6,7 +6,7 @@ import shutil
 from .resolve_path import resolve_path
 import os
 
-def cp(sources, destination, recursive=False):
+def cp(sources, destination, recursive):
     # Путь назначения только один
     dst = resolve_path(destination)
 

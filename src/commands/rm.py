@@ -19,7 +19,7 @@ def is_root_path(path):
         return resolved == "/" or resolved == "\\"
 
 
-def rm(paths, recursive=False):
+def rm(paths, recursive):
     for path in paths:
         p = resolve_path(path)
         if not p.exists():

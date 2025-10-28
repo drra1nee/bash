@@ -8,3 +8,4 @@ from .zip import zip_cmd as zip_cmd
 from .zip import unzip_cmd as unzip_cmd
 from .tar import tar_cmd as tar_cmd
 from .tar import untar_cmd as untar_cmd
+from .grep import grep as grep

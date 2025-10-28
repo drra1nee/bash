@@ -40,7 +40,7 @@ def format_time(time):
     """Преобразует временную метку в читаемую дату и время"""
     return datetime.fromtimestamp(time).strftime('%Y-%m-%d %H:%M')
 
-def ls(paths, long=False):
+def ls(paths, long):
     """
     Выводит содержимое одного или нескольких путей
     """

@@ -7,7 +7,7 @@ import tempfile
 import os
 import shutil
 from pathlib import Path
-from src.commands import ls, cd, cat, cp, mv, rm, zip_cmd, unzip_cmd, tar_cmd, untar_cmd
+from src.commands import ls, cd, cat, cp, mv, rm, zip_cmd, unzip_cmd, tar_cmd, untar_cmd, grep
 
 class TestCommands(unittest.TestCase):
     def setUp(self):
@@ -80,7 +80,7 @@ class TestCommands(unittest.TestCase):
         src = self.test_dir / "src.txt"
         dst = self.test_dir / "dst.txt"
         src.write_text("x")
-        cp([str(src)], str(dst))
+        cp([str(src)], str(dst), recursive=False)
         self.assertTrue(dst.exists())
         self.assertEqual(dst.read_text(), "x")
 
@@ -100,7 +100,7 @@ class TestCommands(unittest.TestCase):
 
     def test_cp_nonexistent_source(self):
         with self.assertRaises(FileNotFoundError):
-            cp(["nonexistent.txt"], "dst.txt")
+            cp(["nonexistent.txt"], "dst.txt", recursive=False)
 
     # mv
     def test_mv_file(self):
@@ -227,6 +227,37 @@ class TestCommands(unittest.TestCase):
         f.write_text("not a tar")
         with self.assertRaises(ValueError):
             untar_cmd(str(f))
+
+    # grep
+    def test_grep_simple(self):
+        f = self.test_dir / "test.txt"
+        f.write_text("hello world\nfoo bar\nhello again")
+        results = grep("hello", [str(f)], recursive=False, ignore_case=False)
+        self.assertEqual(len(results), 2)
+
+    def test_grep_ignore_case(self):
+        f = self.test_dir / "test.txt"
+        f.write_text("Hello\nworld")
+        results = grep("hello", [str(f)], recursive=False, ignore_case=True)
+        self.assertEqual(len(results), 1)
+
+    def test_grep_recursive(self):
+        subdir = self.test_dir / "sub"
+        subdir.mkdir()
+        (subdir / "file.txt").write_text("pattern")
+        (self.test_dir / "root.txt").write_text("pattern")
+        results = grep("pattern", [str(self.test_dir)], recursive=True, ignore_case=False)
+        self.assertEqual(len(results), 2)
+
+    def test_grep_directory_without_recursive(self):
+        d = self.test_dir / "dir"
+        d.mkdir()
+        with self.assertRaises(ValueError):
+            grep("test", [str(d)], recursive=False, ignore_case=False)
+
+    def test_grep_nonexistent_path(self):
+        with self.assertRaises(FileNotFoundError):
+            grep("test", ["nonexistent.txt"], recursive=False, ignore_case=False)
 
 
 if __name__ == "__main__":
