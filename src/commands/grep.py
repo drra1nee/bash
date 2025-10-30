@@ -60,7 +60,7 @@ def grep(pattern, paths, recursive, ignore_case):
     """
     files_search = collect_files(paths, recursive)
 
-    # Обработка флага ignore_case
+    # Обработка флага -i
     flags = re.IGNORECASE if ignore_case else 0
     # Компилируем регулярное выражение
     try:
