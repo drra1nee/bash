@@ -14,19 +14,22 @@ def format_permissions(path):
     try:
         st = path.stat()
     except (OSError, AttributeError):
-        return "----------"  # заглушка при ошибке
+        # заглушка при ошибке
+        return "----------"
 
-    # На Unix/Linux/macOS — настоящие права
+    # На Linux - настоящие права
     if os.name != 'nt':
         return stat.filemode(st.st_mode)
 
-    # На Windows — эмуляция, так как Windows не использует Unix права напрямую
+    # На Windows - эмуляция, так как Windows не использует Unix права напрямую
     is_dir = path.is_dir()
 
     # Владелец
     user_r = 'r'
-    user_w = 'w' if os.access(path, os.W_OK) else '-'  # проверка на запись
-    user_x = 'x' if is_dir else '-'  # каталоги — исполняемые
+    # Проверка на запись
+    user_w = 'w' if os.access(path, os.W_OK) else '-'
+    # Каталоги - исполняемые
+    user_x = 'x' if is_dir else '-'
 
     # Группа и остальные
     group_r = other_r = 'r'
@@ -37,14 +40,13 @@ def format_permissions(path):
     return f"{type_char}{user_r}{user_w}{user_x}{group_r}{group_w}{group_x}{other_r}{other_w}{other_x}"
 
 def format_time(time):
-    """Преобразует временную метку в читаемую дату и время"""
+    """Форматирование даты и времени"""
     return datetime.fromtimestamp(time).strftime('%Y-%m-%d %H:%M')
 
 def ls(paths, long):
     """
     Выводит содержимое одного или нескольких путей
     """
-
     resolved_paths = [resolve_path(p) for p in paths]
 
     output_lines = []

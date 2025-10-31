@@ -71,7 +71,7 @@ class TestCommands(unittest.TestCase):
         with self.assertRaises(IsADirectoryError):
             cat([str(d)])
 
-    def test_cat_nonexistent_file(self):
+    def test_cat_nonexistent(self):
         with self.assertRaises(FileNotFoundError):
             cat(["nonexistent.txt"])
 
@@ -98,7 +98,7 @@ class TestCommands(unittest.TestCase):
         with self.assertRaises(IsADirectoryError):
             cp([str(src_dir)], "dst", recursive=False)
 
-    def test_cp_nonexistent_source(self):
+    def test_cp_nonexistent(self):
         with self.assertRaises(FileNotFoundError):
             cp(["nonexistent.txt"], "dst.txt", recursive=False)
 
@@ -121,7 +121,7 @@ class TestCommands(unittest.TestCase):
         moved_file = target_dir / "test.txt"
         self.assertTrue(moved_file.exists())
 
-    def test_mv_nonexistent_source(self):
+    def test_mv_nonexistent(self):
         with self.assertRaises(FileNotFoundError):
             mv(["nonexistent.txt"], "dest.txt")
 
@@ -186,11 +186,11 @@ class TestCommands(unittest.TestCase):
         unzip_cmd(str(archive_path))
         self.assertTrue((self.test_dir / "folder" / "f.txt").exists())
 
-    def test_zip_nonexistent_folder(self):
+    def test_zip_nonexistent(self):
         with self.assertRaises(FileNotFoundError):
             zip_cmd("nonexistent", "archive.zip")
 
-    def test_unzip_nonexistent_archive(self):
+    def test_unzip_nonexistent(self):
         with self.assertRaises(FileNotFoundError):
             unzip_cmd("nonexistent.zip")
 
@@ -214,11 +214,11 @@ class TestCommands(unittest.TestCase):
         untar_cmd(str(archive_path))
         self.assertTrue((self.test_dir / "tar_folder" / "t.txt").exists())
 
-    def test_tar_nonexistent_folder(self):
+    def test_tar_nonexistent(self):
         with self.assertRaises(FileNotFoundError):
             tar_cmd("nonexistent", "archive.tar.gz")
 
-    def test_untar_nonexistent_archive(self):
+    def test_untar_nonexistent(self):
         with self.assertRaises(FileNotFoundError):
             untar_cmd("nonexistent.tar.gz")
 
@@ -255,7 +255,7 @@ class TestCommands(unittest.TestCase):
         with self.assertRaises(ValueError):
             grep("test", [str(d)], recursive=False, ignore_case=False)
 
-    def test_grep_nonexistent_path(self):
+    def test_grep_nonexistent(self):
         with self.assertRaises(FileNotFoundError):
             grep("test", ["nonexistent.txt"], recursive=False, ignore_case=False)
 
