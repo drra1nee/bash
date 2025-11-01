@@ -165,7 +165,6 @@ class TestCommands(unittest.TestCase):
             rm(["nonexistent.txt"], recursive=False)
 
     def test_rm_root_protection(self):
-        # Проверяем защиту от удаления корня (в твоей реализации)
         root_path = "/"
         if os.name == 'nt':
             root_path = "C:\\"
