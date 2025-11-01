@@ -148,7 +148,7 @@ class TestCommands(unittest.TestCase):
         d = self.test_dir / "to_delete"
         d.mkdir()
         (d / "test.txt").write_text("x")
-        # Подделаем input для подтверждения
+        # Поддельный input для подтверждения
         import builtins
         def l_input(prompt: str = ""):
             return 'y'
